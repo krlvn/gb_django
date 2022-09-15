@@ -1,0 +1,8 @@
+URL-путь с двумя или тремя вложениями:
+https://www.djangoproject.com/start/overview/
+
+Несколько GET-параметров:
+https://yandex.ru/search/?text=django&lr=164908&search_source=yaru_desktop_common
+
+Идентификатор якоря:
+https://docs.python.org/3/faq/programming.html#general-questions
