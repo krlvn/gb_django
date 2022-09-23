@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from django.views.generic import TemplateView
 
@@ -25,9 +26,13 @@ class NewsPageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['news_title'] = 'Новость'
-        context['news_descripton'] = 'Предваритеьно описание новости'
+        context['news_description'] = 'Предварительное описание новости'
         context['news_date'] = datetime.now()
         context['range'] = range(5)
+
+        with open('data/news.json', 'r', encoding='utf-8') as f:
+            context['news_json'] = json.load(f)
+
         return context
 
 
