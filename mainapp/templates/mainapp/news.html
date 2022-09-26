@@ -15,7 +15,7 @@
         <h5 class="card-title">{{ news.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ news.date|date:'Y-m-d h:i:s' }}</h6>
         <p class="card-text">{{ news.description }}</p>
-        <a href="#" class="card-link">Подробнее</a>
+        <a href="{% url 'mainapp:news_detail' news.id %}" class="card-link">Подробнее</a>
       </div>
     </div>
     {% endfor %}
