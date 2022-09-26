@@ -2,6 +2,7 @@ from django.db import models
 from mainapp.managers.news_manager import NewsManager
 from mainapp.managers.courses_manager import CoursesManager
 from mainapp.managers.lessons_manager import LessonsManager
+from mainapp.managers.teachers_manager import TeachersManager
 
 class News(models.Model):
     objects = NewsManager()
@@ -63,3 +64,19 @@ class Lessons(models.Model):
 
     class Meta:
         ordering = ('course', 'num')
+
+
+class Teachers(models.Model):
+    objects = TeachersManager()
+    course = models.ManyToManyField(Courses)
+    name = models.CharField(max_length=128, verbose_name='Name')
+    surname = models.CharField(max_length=128, verbose_name='Surname')
+    birth_date = models.DateField(verbose_name='Birth date')
+    deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.pk} | {self.name} {self.surname}'
+
+    def delete(self, *args):
+        self.deleted = True
+        self.save()
