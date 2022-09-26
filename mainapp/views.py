@@ -1,7 +1,7 @@
 from datetime import datetime
-import json
-
+from django.core.paginator import Paginator
 from django.views.generic import TemplateView
+from .models import News, Courses, Lessons, Teachers
 
 
 class MainPageView(TemplateView):
@@ -23,18 +23,28 @@ class ContactsPageView(TemplateView):
 class NewsPageView(TemplateView):
     template_name = "mainapp/news.html"
 
+    paginated_by = 3
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['news_title'] = 'Новость'
-        context['news_description'] = 'Предварительное описание новости'
-        context['news_date'] = datetime.now()
-        context['range'] = range(5)
 
-        with open('data/news.json', 'r', encoding='utf-8') as f:
-            context['news_json'] = json.load(f)
+        page_number = self.request.GET.get('page', 1)
+        paginator = Paginator(News.objects.all(), self.paginated_by)
+        page = paginator.get_page(page_number)
+        context['page'] = page
 
         return context
 
 
 class CoursesPageView(TemplateView):
     template_name = "mainapp/courses_list.html"
+
+    paginated_by = 3
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        page_number = self.request.GET.get('page', 1)
+        paginator = Paginator(Courses.objects.all(), self.paginated_by)
+        page = paginator.get_page(page_number)
+        context['page'] = page
+
+        return context
