@@ -68,6 +68,7 @@ class Lessons(models.Model):
 
 class Teachers(models.Model):
     objects = TeachersManager()
+
     course = models.ManyToManyField(Courses)
     name = models.CharField(max_length=128, verbose_name='Name')
     surname = models.CharField(max_length=128, verbose_name='Surname')
