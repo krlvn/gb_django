@@ -8,7 +8,7 @@ class News(models.Model):
     objects = NewsManager()
 
     title = models.CharField(max_length=256, verbose_name='Title')
-    preamble = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Preamble')
+    preambule = models.CharField(max_length=1024, blank=True, null=True, verbose_name='Preambule')
     body = models.TextField(blank=False, null=False, verbose_name='Body')
     body_as_markdown = models.BooleanField(default=False, verbose_name='As markdown')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Date of creating', editable=False)
@@ -68,6 +68,7 @@ class Lessons(models.Model):
 
 class Teachers(models.Model):
     objects = TeachersManager()
+
     course = models.ManyToManyField(Courses)
     name = models.CharField(max_length=128, verbose_name='Name')
     surname = models.CharField(max_length=128, verbose_name='Surname')
