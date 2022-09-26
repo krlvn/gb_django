@@ -11,5 +11,7 @@ urlpatterns = [
     path('doc_site/', DocSitePageView.as_view(), name='doc_site'),
     path('contacts/', ContactsPageView.as_view(), name='contacts'),
     path('news/', NewsPageView.as_view(), name='news'),
-    path('courses_list/', CoursesPageView.as_view(), name='courses'),
+    path('news/<int:pk>/', NewsDetailPageView.as_view(), name='news_detail'),
+    path('courses/', CoursesPageView.as_view(), name='courses'),
+    path('courses/<int:pk>/', CoursesDetailPageView.as_view(), name='courses_detail'),
 ]
