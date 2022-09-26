@@ -1,5 +1,6 @@
 from django.db import models
 from mainapp.managers.news_manager import NewsManager
+from mainapp.managers.courses_manager import CoursesManager
 
 class News(models.Model):
     objects = NewsManager()
@@ -14,6 +15,24 @@ class News(models.Model):
 
     def __str__(self):
         return f'{self.pk} {self.title}'
+
+    def delete(self, *args):
+        self.deleted = True
+        self.save()
+
+
+class Courses(models.Model):
+    name = models.CharField(max_length=256, verbose_name='Name')
+    description = models.TextField(blank=True, null=True, verbose_name='Description')
+    description_as_markdown = models.BooleanField(default=False, verbose_name='As markdown')
+    cost = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Cost')
+    cover = models.CharField(max_length=25, default='no_image.svg', verbose_name='Cover')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='Date of creating', editable=False)
+    update_date = models.DateTimeField(auto_now=True, verbose_name='Date of editing', editable=False)
+    deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.pk} {self.name}'
 
     def delete(self, *args):
         self.deleted = True
