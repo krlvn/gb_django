@@ -1,6 +1,7 @@
 from django.db import models
 from mainapp.managers.news_manager import NewsManager
 from mainapp.managers.courses_manager import CoursesManager
+from mainapp.managers.lessons_manager import LessonsManager
 
 class News(models.Model):
     objects = NewsManager()
@@ -22,6 +23,8 @@ class News(models.Model):
 
 
 class Courses(models.Model):
+    objects = CoursesManager()
+
     name = models.CharField(max_length=256, verbose_name='Name')
     description = models.TextField(blank=True, null=True, verbose_name='Description')
     description_as_markdown = models.BooleanField(default=False, verbose_name='As markdown')
@@ -37,3 +40,26 @@ class Courses(models.Model):
     def delete(self, *args):
         self.deleted = True
         self.save()
+
+
+class Lessons(models.Model):
+    objects = LessonsManager()
+
+    course = models.ForeignKey(Courses, on_delete=models.CASCADE)
+    num = models.PositiveIntegerField(verbose_name='Lesson number')
+    title = models.CharField(max_length=256, verbose_name='Title')
+    description = models.TextField(blank=True, null=True, verbose_name='Description')
+    description_as_markdown = models.BooleanField(default=False, verbose_name='As markdown')
+    create_date = models.DateTimeField(auto_now_add=True, verbose_name='Date of creating', editable=False)
+    update_date = models.DateTimeField(auto_now=True, verbose_name='Date of editing', editable=False)
+    deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.course.name} | {self.num} | {self.title}'
+
+    def delete(self, *args):
+        self.deleted = True
+        self.save()
+
+    class Meta:
+        ordering = ('course', 'num')
