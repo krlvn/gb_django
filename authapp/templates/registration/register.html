@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% include 'components/top_nav_panel.html' %}
+    {% include 'components/messages.html' %}
     <div class="row justify-content-center my-2">
       <div class="col-lg-6">
         <h3>Регистрация нового пользователя</h3>
@@ -81,4 +83,6 @@
       </div>
     </div>
 
+    {% include 'components/footer.html' %}
 {% endblock content %}
+

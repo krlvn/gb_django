@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
     {% block content %}
+        {% include 'components/top_nav_panel.html' %}
         {% include 'components/messages.html' %}
         <div class="row justify-content-around align-items-center"
             style="height: 100vh; margin: 0">
@@ -54,4 +55,6 @@
                 </p>
             </div>
         </div>
-    {% endblock content %}
+    {% include 'components/footer.html' %}
+{% endblock content %}
+
