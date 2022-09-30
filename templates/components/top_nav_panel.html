@@ -36,7 +36,9 @@
                         </div>
                     </li>
                 {% else %}
-                    <a class="dropdown-item" href="{% url 'authapp:login' %}">Вход</a>
+                    <li class="nav-item {% if request.resolver_match.view_name == 'authapp:login' %}active{% endif %}">
+                        <a class="nav-link" href="{% url 'authapp:login' %}">Вход</a>
+                    </li>
                 {% endif %}
                 <li class="nav-item {% if request.resolver_match.view_name == 'mainapp:contacts' %}active{% endif %}">
                     <a class="nav-link" href="{% url 'mainapp:contacts' %}">Контакты</a>
