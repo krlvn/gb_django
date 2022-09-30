@@ -1,4 +1,4 @@
-{% extends 'mainapp/base.html' %}
+{% extends 'base.html' %}
 {% load static markdownify %}
 
 {% block title %}
@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block content %}
-    {% include 'mainapp/components/top_nav_panel.html' %}
+    {% include 'components/top_nav_panel.html' %}
     <h1 class="mt-2">
         {{ course_object.name }}
     </h1>
@@ -95,5 +95,5 @@
         {% endfor %}
 
     </div>
-    {% include 'mainapp/components/footer.html' %}
+    {% include 'components/footer.html' %}
 {% endblock content %}
