@@ -9,10 +9,6 @@ class MainPageView(TemplateView):
     template_name = "mainapp/index.html"
 
 
-class LoginPageView(TemplateView):
-    template_name = "mainapp/login.html"
-
-
 class DocSitePageView(TemplateView):
     template_name = "mainapp/doc_site.html"
 
