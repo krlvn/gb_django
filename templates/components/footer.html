@@ -11,7 +11,11 @@
             <ul class="list-unstyled">
                 <li><a href="{% url 'mainapp:main' %}">Домашняя</a></li>
                 <li><a href="{% url 'mainapp:news' %}">Новости</a></li>
-                <li><a href="{% url 'mainapp:login' %}">Войти</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'authapp:logout' %}">Выйти</a></li>
+                {% else %}
+                    <li><a href="{% url 'authapp:login' %}">Войти</a></li>
+                {% endif %}
             </ul>
             </p>
         </div>
@@ -54,7 +58,7 @@
     </div>
     <div class="row justify-content-center">
         <div>
-            <p><small>&copy; GeekBrains 2021</small></p>
+            <p><small>&copy; GeekBrains 2022</small></p>
         </div>
     </div>
 </div>
