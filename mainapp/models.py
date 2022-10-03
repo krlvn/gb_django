@@ -15,6 +15,11 @@ class News(models.Model):
     update_date = models.DateTimeField(auto_now=True, verbose_name='Date of editing', editable=False)
     deleted = models.BooleanField(default=False)
 
+    class Meta():
+        verbose_name = 'News'
+        verbose_name_plural = 'News'
+        ordering = ('-create_date',)
+
     def __str__(self):
         return f'{self.pk} {self.title}'
 
@@ -34,6 +39,11 @@ class Courses(models.Model):
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Date of creating', editable=False)
     update_date = models.DateTimeField(auto_now=True, verbose_name='Date of editing', editable=False)
     deleted = models.BooleanField(default=False)
+
+    class Meta():
+        verbose_name = 'Course'
+        verbose_name_plural = 'Courses'
+        ordering = ('-create_date',)
 
     def __str__(self):
         return f'{self.pk} {self.name}'
@@ -55,15 +65,17 @@ class Lessons(models.Model):
     update_date = models.DateTimeField(auto_now=True, verbose_name='Date of editing', editable=False)
     deleted = models.BooleanField(default=False)
 
+    class Meta():
+        verbose_name = 'Lesson'
+        verbose_name_plural = 'Lessons'
+        ordering = ('course', 'num',)
+
     def __str__(self):
         return f'{self.course.name} | {self.num} | {self.title}'
 
     def delete(self, *args):
         self.deleted = True
         self.save()
-
-    class Meta:
-        ordering = ('course', 'num')
 
 
 class Teachers(models.Model):
@@ -74,6 +86,11 @@ class Teachers(models.Model):
     surname = models.CharField(max_length=128, verbose_name='Surname')
     birth_date = models.DateField(verbose_name='Birth date')
     deleted = models.BooleanField(default=False)
+
+    class Meta():
+        verbose_name = 'Teacher'
+        verbose_name_plural = 'Teachers'
+        ordering = ('name', 'surname',)
 
     def __str__(self):
         return f'{self.pk} | {self.name} {self.surname}'
