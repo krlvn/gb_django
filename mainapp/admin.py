@@ -23,3 +23,12 @@ class LessonAdmin(admin.ModelAdmin):
     def mark_deleted(self, request, queryset):
         queryset.update(deleted=True)
     mark_deleted.short_description = _('Mark deleted')
+
+@admin.register(mainapp_models.Teachers)
+class TeacherAdmin(admin.ModelAdmin):
+    list_display = ['id', '__str__', 'get_courses']
+    list_select_related = True
+
+    def get_courses(self, obj):
+        return ', '.join((i.name for i in obj.course.all()))
+    get_courses.short_description = _('Courses')
