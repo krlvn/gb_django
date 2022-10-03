@@ -33,3 +33,17 @@ class TeacherAdmin(admin.ModelAdmin):
     def get_courses(self, obj):
         return ', '.join((i.name for i in obj.course.all()))
     get_courses.short_description = _('Courses')
+
+
+@admin.register(mainapp_models.Courses)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'cost', 'deleted']
+    ordering = ['-name']
+    list_per_page = 5
+    list_filter = ['create_date', 'deleted']
+    actions = ['mark_deleted']
+    search_fields = ['title', 'description']
+
+    def mark_deleted(self, request, queryset):
+        queryset.update(deleted=True)
+    mark_deleted.short_description = _('Mark deleted')
