@@ -1,7 +1,8 @@
-from datetime import datetime
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, CreateView, DetailView, UpdateView, DeleteView
 from .models import News, Courses, Lessons, Teachers
 
 
@@ -17,27 +18,35 @@ class ContactsPageView(TemplateView):
     template_name = "mainapp/contacts.html"
 
 
-class NewsPageView(TemplateView):
-    template_name = "mainapp/news.html"
+class NewsListView(ListView):
+    model = News
+    paginate_by = 5
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted=False)
 
-    paginated_by = 3
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        page_number = self.request.GET.get('page', 1)
-        paginator = Paginator(News.objects.all(), self.paginated_by)
-        page = paginator.get_page(page_number)
-        context['page'] = page
+class NewsCreateView(PermissionRequiredMixin, CreateView):
+    model = News
+    fields = "__all__"
+    success_url = reverse_lazy('mainapp:news')
+    permission_required = ('mainapp.add_news',)
 
-        return context
 
-class NewsDetailPageView(TemplateView):
-    template_name = 'mainapp/news_detail.html'
+class NewsDetailView(DetailView):
+    model = News
 
-    def get_context_data(self, pk=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['news_object'] = get_object_or_404(News, pk=pk)
-        return context
+
+class NewsUpdateView(PermissionRequiredMixin, UpdateView):
+    model = News
+    fields = '__all__'
+    success_url = reverse_lazy('mainapp:news')
+    permission_required = ('mainapp.change_news',)
+
+
+class NewsDeleteView(PermissionRequiredMixin, DeleteView):
+    model = News
+    success_url = reverse_lazy('mainapp:news')
+    permission_required = ('mainapp.delete_news',)
 
 
 class CoursesPageView(TemplateView):
