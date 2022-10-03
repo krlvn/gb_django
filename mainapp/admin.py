@@ -47,3 +47,21 @@ class CourseAdmin(admin.ModelAdmin):
     def mark_deleted(self, request, queryset):
         queryset.update(deleted=True)
     mark_deleted.short_description = _('Mark deleted')
+
+
+@admin.register(mainapp_models.CourseFeedback)
+class CourseFeedbackAdmin(admin.ModelAdmin):
+    list_display = ['id', 'get_course_name', 'rating', 'deleted']
+    ordering = ['-course__name', '-rating']
+    list_per_page = 5
+    list_filter = ['course', 'rating', 'create_date', 'deleted']
+    actions = ['mark_deleted']
+    search_fields = ['feedback',]
+
+    def get_course_name(self, obj):
+        return obj.course.name
+    get_course_name.short_description = _('Course')
+
+    def mark_deleted(self, request, queryset):
+        queryset.update(deleted=True)
+    mark_deleted.short_description = _('Mark deleted')

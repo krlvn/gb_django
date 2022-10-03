@@ -119,5 +119,14 @@ class CourseFeedback(models.Model):
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Date of creating', editable=False)
     deleted = models.BooleanField(default=False)
 
+    class Meta():
+        verbose_name = 'CourseFeedback'
+        verbose_name_plural = 'CourseFeedbacks'
+        ordering = ('course', 'rating',)
+
     def __str__(self):
         return f'{self.course} ({self.user})'
+
+    def delete(self, *args):
+        self.deleted = True
+        self.save()
