@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
     LoginRequiredMixin,
@@ -8,10 +9,11 @@ from django.contrib.auth.mixins import (
 )
 from django.core.cache import cache
 from django.core.paginator import Paginator
-from django.http import JsonResponse, FileResponse
+from django.http import JsonResponse, FileResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     TemplateView,
     ListView,
@@ -23,7 +25,8 @@ from django.views.generic import (
 )
 
 from .models import News, Courses, Lessons, Teachers, CourseFeedback
-from .forms import CourseFeedbackForm
+from .forms import CourseFeedbackForm, MailFeedbackForm
+from .tasks import send_feedback_mail
 
 
 logger = logging.getLogger(__name__)
@@ -151,3 +154,36 @@ class LogDownloadView(UserPassesTestMixin, View):
 
     def get(self, *args, **kwargs):
         return FileResponse(open(settings.LOG_FILE, 'rb'))
+
+
+class ContactsPageView(TemplateView):
+    template_name = 'mainapp/contacts.html'
+    def get_context_data(self, **kwargs):
+        context = super(ContactsPageView, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            context['form'] = MailFeedbackForm(user=self.request.user)
+        return context
+
+    def post(self, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            cache_lock_flag = cache.get(f'mail_feedback_lock_{self.request.user.pk}')
+            if not cache_lock_flag:
+                cache.set(
+                    f'mail_feedback_lock_{self.request.user.pk}',
+                    'lock',
+                    timeout=300,
+                )
+                messages.add_message(self.request, messages.INFO, _('Message sended'))
+                send_feedback_mail.delay(
+                    {
+                        'user_id': self.request.POST.get('user_id'),
+                        'message': self.request.POST.get('message'),
+                    }
+                )
+            else:
+                messages.add_message(
+                    self.request,
+                    messages.WARNING,
+                    _('You can send only one message per 5 minutes'),
+                )
+        return HttpResponseRedirect(reverse_lazy('mainapp:contacts'))
