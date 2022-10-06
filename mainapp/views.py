@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin, \
     LoginRequiredMixin
 from django.core.paginator import Paginator
@@ -9,6 +11,9 @@ from django.views.generic import TemplateView, ListView, CreateView, DetailView,
 
 from .models import News, Courses, Lessons, Teachers, CourseFeedback
 from .forms import CourseFeedbackForm
+
+
+logger = logging.getLogger(__name__)
 
 
 class MainPageView(TemplateView):
@@ -73,6 +78,8 @@ class CoursesDetailPageView(TemplateView):
     template_name = 'mainapp/courses_detail.html'
 
     def get_context_data(self, pk=None, **kwargs):
+        logger.debug('Yet another log message')
+
         context = super().get_context_data(**kwargs)
         context['course_object'] = get_object_or_404(Courses, pk=pk)
         context['lessons'] = Lessons.objects.filter(course=context['course_object'])
