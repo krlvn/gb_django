@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     UserPassesTestMixin,
 )
+from django.core.cache import cache
 from django.core.paginator import Paginator
 from django.http import JsonResponse, FileResponse
 from django.shortcuts import get_object_or_404
@@ -105,9 +106,17 @@ class CoursesDetailPageView(TemplateView):
                     course=context['course_object'],
                     user=self.request.user
                 )
-        context['feedback_list'] = CourseFeedback.objects.filter(
-            course=context['course_object']
-        ).order_by('-create_date', '-rating')[:5]
+
+        cached_feedback = cache.get(f'feedback_list_{pk}')
+        if not cached_feedback:
+            context['feedback_list'] = CourseFeedback.objects.filter(
+                course=context['course_object']
+            ).order_by('-create_date', '-rating')[:5]
+
+            cache.set(f'feedback_list_{pk}', context['feedback_list'], timeout=300)
+        else:
+            context['feedback_list'] = cached_feedback
+
         return context
 
 
