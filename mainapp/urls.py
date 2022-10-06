@@ -20,7 +20,6 @@ urlpatterns = [
     path(
         'courses/',
          cache_page(60 * 5)(CoursesPageView.as_view()),
-         # CoursesPageView.as_view(),
          name='courses'
     ),
     path('courses/<int:pk>/', CoursesDetailPageView.as_view(), name='courses_detail'),
