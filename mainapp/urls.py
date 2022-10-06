@@ -19,4 +19,7 @@ urlpatterns = [
     path('courses/', CoursesPageView.as_view(), name='courses'),
     path('courses/<int:pk>/', CoursesDetailPageView.as_view(), name='courses_detail'),
     path('course_feedback/', CourseFeedbackFormProcessView.as_view(), name='course_feedback'),
+
+    path('log_view/', LogView.as_view(), name='log_view'),
+    path('log_download/', LogDownloadView.as_view(), name='log_download'),
 ]
