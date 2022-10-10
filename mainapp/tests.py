@@ -1,3 +1,10 @@
+from http import HTTPStatus
 from django.test import TestCase
+from django.urls import reverse
 
-# Create your tests here.
+
+class TestMainPage(TestCase):
+    def test_page_open(self):
+        path = reverse('mainapp:main')
+        result = self.client.get(path)
+        self.assertEqual(result.status_code, HTTPStatus.OK)
