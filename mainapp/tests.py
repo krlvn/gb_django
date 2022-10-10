@@ -1,8 +1,11 @@
 from http import HTTPStatus
+from django.core import mail
 from django.test import TestCase, Client
 from django.urls import reverse
-from .models import News
 
+from .models import News
+from authapp.models import CustomUser
+from .tasks import send_feedback_mail
 
 class TestMainPage(TestCase):
     def test_page_open(self):
@@ -139,3 +142,17 @@ class TestNewsPageNotAuth(TestCase):
         self.client.post(path)
         news_obj.refresh_from_db()
         self.assertTrue(news_obj.deleted)
+
+
+class TestTaskMailSend(TestCase):
+    fixtures = (
+        'authapp/fixtures/001_user_admin.json',
+    )
+
+    def test_mail_send(self):
+        message_text = 'Test message text'
+        user_obj = CustomUser.objects.first()
+        send_feedback_mail(
+            {'user_id': user_obj.id, 'message': message_text}
+        )
+        self.assertEqual(mail.outbox[0].body, message_text)
